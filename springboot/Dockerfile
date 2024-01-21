@@ -1,10 +1,8 @@
-FROM maven:3.9.1-openjdk-8 AS build
-WORKDIR /app
-COPY . /app/
-RUN mvn clean package
+FROM maven:3.8.5-openjdk-17 AS build
+COPY . .
+RUN mvn clean package -DskipTests
 
-From openjdk:8-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.jar /app/app.jar
+From openjdk:17.0.1-jdk-slim
+COPY --from=build /target/springboot-0.0.1-SNAPSHOT.jar springboot.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java","-jar","springboot.jar"]
